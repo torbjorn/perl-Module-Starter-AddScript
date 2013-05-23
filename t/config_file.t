@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 2;
+use Test::Most tests => 3;
 
 use AddScript;
 
@@ -21,6 +21,18 @@ use AddScript;
     $ENV{HOME} = "t/data";
 
     is( AddScript->_config_file, "t/data/.module-starter/config", "M-S dir default" );
+
+    my $expected_config =
+      {
+       author       => 'Firstname Lastname',
+       email        => 'first.last@some.domain',
+       builder      => [qw/ExtUtils::MakeMaker Module::Build/],
+       template_dir => '/home/username/.module-starter',
+       modules      => [],
+       plugins      => [],
+      };
+
+    cmp_deeply( {AddScript->_config_read}, $expected_config, "config content" );
 
 }
 
