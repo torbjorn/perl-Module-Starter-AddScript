@@ -6,6 +6,8 @@ use Carp;
 use base 'Module::Starter::App';
 use Set::Object 'set';
 use IO::Prompter;
+use File::Spec::Functions qw/catfile/;
+use Template;
 
 use version; our $VERSION = qv('0.0.3');
 
@@ -21,29 +23,52 @@ sub _check_if_module_dir {
 
 }
 
-my $skeleton = do { local $/; <DATA> };
-$skeleton =~ s/^!head=/head=/g
+my $skeleton;
+{
+
+    my @skeleton = <DATA>;
+
+    s/^!=([a-z0-9]+)\b/=$1/ for @skeleton;
+    $skeleton = join "", @skeleton;
+
+}
 
 sub run {
+
+    my $self = shift;
 
     if ( not -w "./" ) {
         croak "Cannot write to Cwd - go elsewhere to create the script or fix this.";
     }
 
-    my $self = shift;
-    my %config = $self->_config_read;
+    my $dest_dir = "./";
 
     if ( _check_if_module_dir ) {
 
+        if ( ! -d "bin" ) {
+            mkdir "bin" or confess "Failed mkdir bin: $!";
+        }
+
+        $dest_dir = "bin";
+
     }
-    else {
 
+    my %config = $self->_config_read;
+    $config{year} ||= (localtime(time))[5] + 1900;
 
+    $config{script} = $ARGV[0] || prompt "Script name:";
+    $config{author} ||= prompt "Author:";
+    $config{email} ||= prompt "Email:";
 
-    }
+    my $dest_filepath = catfile( $dest_dir, $config{script} );
+
+    my $template = Template->new({ INCLUDE_PATH => "./" });
+    $template->process( \$skeleton, \%config, $dest_filepath )
+      || confess $template->error();
+
 }
 
-sub _process_command_line {} # skip super's processing
+sub _process_command_line {} # skip super's processing of commandline
 
 1; # Magic true value required at end of module
 
@@ -51,8 +76,7 @@ sub _process_command_line {} # skip super's processing
 
 =head1 NAME
 
-AddScript - [One line description of module's purpose here]
-
+AddScript - Create a perl script, understands Module::Starter dir structure
 
 =head1 VERSION
 
@@ -214,15 +238,15 @@ use Getopt::Euclid;
 
 !=head1 NAME
 
-<SCRIPT> - Your program here
+[% script %] - Your program here
 
 !=head1 VERSION
 
-This documentation refers to <SCRIPT> version 0.1
+This documentation refers to [% script %] version 0.1
 
 !=head1 USAGE
 
-    <SCRIPT> [options]  -s[ize]=<h>x<w>  -o[ut][file] <file>
+    [% script %] [options]  -s[ize]=<h>x<w>  -o[ut][file] <file>
 
 !=head1 REQUIRED ARGUMENTS
 
@@ -290,7 +314,7 @@ Remainder of documentation starts here...
 
 !=head1 AUTHOR
 
-<AUTHOR> (<EMAIL>)
+[% author %] ([% email %])
 
 !=head1 BUGS
 
@@ -299,7 +323,9 @@ Bug reports and other feedback are most welcome.
 
 !=head1 COPYRIGHT
 
-Copyright (c) <YEAR>, <AUTHOR>. All Rights Reserved.
+Copyright (c) [% year %], [% author %]. All Rights Reserved.
 This module is free software. It may be used, redistributed
 and/or modified under the terms of the Perl Artistic License
 (see http://www.perl.com/perl/misc/Artistic.html)
+
+!=cut
