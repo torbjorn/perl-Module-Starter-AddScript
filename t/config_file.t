@@ -2,25 +2,25 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 3;
+use Test::Most tests => 5;
 
 use AddScript;
 
-{
-    local %ENV;
+{ ## M-S dir from ENV
 
-    $ENV{MODULE_STARTER_DIR} = "t/data/.module-starter";
+    local $ENV{MODULE_STARTER_DIR} = "t/data/.module-starter";
 
-    is( AddScript->_config_file, "t/data/.module-starter/config", "M-S dir in ENV" );
+    is( AddScript->_config_file, "t/data/.module-starter/config", "config file from ENV" );
 
 }
 
-{
-    local %ENV;
+{ ## M-S dir from HOME
 
+    local %ENV;
+    delete $ENV{MODULE_STARTER_DIR};
     $ENV{HOME} = "t/data";
 
-    is( AddScript->_config_file, "t/data/.module-starter/config", "M-S dir default" );
+    is( AddScript->_config_file, "t/data/.module-starter/config", "config file from default" );
 
     my $expected_config =
       {
@@ -33,6 +33,19 @@ use AddScript;
       };
 
     cmp_deeply( {AddScript->_config_read}, $expected_config, "config content" );
+
+}
+
+{ ## M-S dir doesn't exist
+
+    local %ENV;
+    delete $ENV{MODULE_STARTER_DIR};
+    $ENV{HOME} = "/";
+
+    is( AddScript->_config_file, "/.module-starter/config", "non-existing M-S dir" );
+
+    is( AddScript->_config_read, undef, "non-existing config" );
+
 
 }
 
