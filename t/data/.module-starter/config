@@ -1,0 +1,4 @@
+author:  Firstname Lastname
+email:   first.last@some.domain
+builder: ExtUtils::MakeMaker Module::Build
+template_dir: /home/username/.module-starter

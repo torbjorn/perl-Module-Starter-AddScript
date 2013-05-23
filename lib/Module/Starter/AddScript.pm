@@ -1,4 +1,4 @@
-package AddScript;
+package Module::Starter::AddScript;
 
 use warnings;
 use strict;
@@ -76,16 +76,16 @@ sub _process_command_line {} # skip super's processing of commandline
 
 =head1 NAME
 
-AddScript - Create a perl script, understands Module::Starter dir structure
+Module::Starter::AddScript - Create a perl script, understands Module::Starter dir structure
 
 =head1 VERSION
 
-This document describes AddScript version 0.0.1
+This document describes Module::Starter::AddScript version 0.0.1
 
 
 =head1 SYNOPSIS
 
-    use AddScript;
+    use Module::Starter::AddScript;
 
 =for author to fill in:
     Brief code example(s) here showing commonest usage(s).
@@ -144,7 +144,7 @@ does the work
     that can be set. These descriptions must also include details of any
     configuration language used.
 
-AddScript requires no configuration files or environment variables.
+Module::Starter::AddScript requires no configuration files or environment variables.
 
 
 =head1 DEPENDENCIES

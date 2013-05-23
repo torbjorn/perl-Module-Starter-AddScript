@@ -5,3 +5,5 @@ use warnings;
 use Carp;
 
 use AddScript;
+
+AddScript->run;
