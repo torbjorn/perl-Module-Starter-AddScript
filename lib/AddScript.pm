@@ -5,6 +5,7 @@ use strict;
 use Carp;
 use base 'Module::Starter::App';
 use Set::Object 'set';
+use IO::Prompter;
 
 use version; our $VERSION = qv('0.0.3');
 
@@ -20,27 +21,33 @@ sub _check_if_module_dir {
 
 }
 
+my $skeleton = do { local $/; <DATA> };
+$skeleton =~ s/^!head=/head=/g
+
 sub run {
 
+    if ( not -w "./" ) {
+        croak "Cannot write to Cwd - go elsewhere to create the script or fix this.";
+    }
+
     my $self = shift;
-    $self->_config_read;
+    my %config = $self->_config_read;
+
+    if ( _check_if_module_dir ) {
+
+    }
+    else {
 
 
 
+    }
 }
 
-# Other recommended modules (uncomment to use):
-#  use IO::Prompt;
-#  use Perl6::Export;
-#  use Perl6::Slurp;
-#  use Perl6::Say;
-
-
-# Module implementation here
-
+sub _process_command_line {} # skip super's processing
 
 1; # Magic true value required at end of module
-__END__
+
+=encoding utf8
 
 =head1 NAME
 
@@ -192,3 +199,107 @@ RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
 FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
 SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
+
+=cut
+__DATA__
+#!perl
+
+use strict;
+use warnings;
+use Carp;
+
+use Getopt::Euclid;
+
+!=encoding utf8
+
+!=head1 NAME
+
+<SCRIPT> - Your program here
+
+!=head1 VERSION
+
+This documentation refers to <SCRIPT> version 0.1
+
+!=head1 USAGE
+
+    <SCRIPT> [options]  -s[ize]=<h>x<w>  -o[ut][file] <file>
+
+!=head1 REQUIRED ARGUMENTS
+
+!=over
+
+!=item  -s[ize]=<h>x<w>
+
+Specify size of simulation
+
+!=for Euclid:
+    h.type:    int > 0
+    h.default: 24
+    w.type:    int >= 10
+    w.default: 80
+
+!=item  -o[ut][file] <file>
+
+Specify output file
+
+!=for Euclid:
+    file.type:    writable
+    file.default: '-'
+
+!=back
+
+!=head1 OPTIONS
+
+!=over
+
+!=item  -i
+
+Specify interactive simulation
+
+!=item  -l[[en][gth]] <l>
+
+Length of simulation. The default is l.default
+
+!=for Euclid:
+    l.type:    int > 0
+    l.default: 99
+
+!=item --debug [<log_level>]
+
+Set the log level. Default is log_level.default but if you provide --debug,
+then it is log_level.opt_default.
+
+!=for Euclid:
+    log_level.type:        int
+    log_level.default:     0
+    log_level.opt_default: 1
+
+!=item --version
+
+!=item --usage
+
+!=item --help
+
+!=item --man
+
+Print the usual program information
+
+!=back
+
+Remainder of documentation starts here...
+
+!=head1 AUTHOR
+
+<AUTHOR> (<EMAIL>)
+
+!=head1 BUGS
+
+There are undoubtedly serious bugs lurking somewhere in this code.
+Bug reports and other feedback are most welcome.
+
+!=head1 COPYRIGHT
+
+Copyright (c) <YEAR>, <AUTHOR>. All Rights Reserved.
+This module is free software. It may be used, redistributed
+and/or modified under the terms of the Perl Artistic License
+(see http://www.perl.com/perl/misc/Artistic.html)
