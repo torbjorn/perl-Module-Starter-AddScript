@@ -11,7 +11,7 @@ use AddScript;
 
     $ENV{MODULE_STARTER_DIR} = "t/data/.module-starter";
 
-    is( AddScript->_config_file, "t/data/.module-starter/config", "m-s dir in ENV" );
+    is( AddScript->_config_file, "t/data/.module-starter/config", "M-S dir in ENV" );
 
 }
 
@@ -20,7 +20,7 @@ use AddScript;
 
     $ENV{HOME} = "t/data";
 
-    is( AddScript->_config_file, "t/data/.module-starter/config", "m-s dir default" );
+    is( AddScript->_config_file, "t/data/.module-starter/config", "M-S dir default" );
 
 }
 
