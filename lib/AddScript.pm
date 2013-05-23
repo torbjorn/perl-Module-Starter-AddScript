@@ -230,9 +230,14 @@ __DATA__
 
 use strict;
 use warnings;
+use utf8;
 use Carp;
 
 use Getopt::Euclid;
+
+[% FOR m IN project_modules -%]
+use [% m %];
+[% END -%]
 
 !=encoding utf8
 
